@@ -2,7 +2,10 @@ import React from "react";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { useForm } from "../../hooks/useForm";
-import { login } from "../../redux/auth/auth-actions";
+import {
+  startGoogleLogin,
+  startLoginEmailPassword,
+} from "../../redux/auth/auth-actions";
 
 const LoginPage = () => {
   // HOOK PARA EJECUTAR LA ACCION DEL REDUCER
@@ -19,7 +22,11 @@ const LoginPage = () => {
     e.preventDefault();
 
     // SE EJECUTA EL LOGIN DEL authReducer, EL DISPATCH YA TIENE ACCESO A EL GRACIAS AL HOOK
-    dispatch(login(12345, "Cris"));
+    dispatch(startLoginEmailPassword(email, password));
+  };
+
+  const handleGoogleLogin = () => {
+    dispatch(startGoogleLogin());
   };
 
   return (
@@ -52,7 +59,7 @@ const LoginPage = () => {
         <div className="auth__social-networks">
           <p>Login Google</p>
 
-          <div className="google-btn">
+          <div className="google-btn" onClick={handleGoogleLogin}>
             <div className="google-icon-wrapper">
               <img
                 className="google-icon"
