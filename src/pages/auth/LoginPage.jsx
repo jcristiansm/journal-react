@@ -1,24 +1,48 @@
 import React from "react";
+import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
+import { useForm } from "../../hooks/useForm";
+import { login } from "../../redux/auth/auth-actions";
 
 const LoginPage = () => {
+  // HOOK PARA EJECUTAR LA ACCION DEL REDUCER
+  const dispatch = useDispatch();
+
+  const [formValues, handleInputChange] = useForm({
+    email: "cris@gmail.com",
+    password: "123456",
+  });
+
+  const { email, password } = formValues;
+
+  const handleLogin = (e) => {
+    e.preventDefault();
+
+    // SE EJECUTA EL LOGIN DEL authReducer, EL DISPATCH YA TIENE ACCESO A EL GRACIAS AL HOOK
+    dispatch(login(12345, "Cris"));
+  };
+
   return (
     <>
       <h3 className="auth__title">Login</h3>
 
-      <form>
+      <form onSubmit={handleLogin}>
         <input
           type="text"
-          placeholder="email"
-          name="Email"
+          placeholder="Email"
+          name="email"
           className="auth__input"
           autoComplete="off"
+          value={email}
+          onChange={handleInputChange}
         />
         <input
           type="password"
           placeholder="Password"
           name="password"
           className="auth__input"
+          value={password}
+          onChange={handleInputChange}
         />
 
         <button type="submit" className="btn btn-primary btn-block">
@@ -42,7 +66,9 @@ const LoginPage = () => {
           </div>
         </div>
 
-        <Link to="/auth/register" className="link">Crear nueva cuenta</Link>
+        <Link to="/auth/register" className="link">
+          Crear nueva cuenta
+        </Link>
       </form>
     </>
   );
