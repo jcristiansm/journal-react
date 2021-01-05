@@ -1,3 +1,5 @@
+import Swal from "sweetalert2";
+
 import { firebase, googleAuthProvider } from "../../firebase/firebase";
 import { finishLoading, startLoading } from "../ui/ui-actions";
 import { authTypes } from "./authTypes";
@@ -15,9 +17,8 @@ export const startLoginEmailPassword = (email, password) => {
         dispatch(finishLoading());
       })
       .catch((e) => {
-        console.log(e);
-
         dispatch(finishLoading());
+        Swal.fire("Error", "Correo o cantraseña incorrectos", "error");
       });
   };
 };
@@ -33,7 +34,7 @@ export const startRegisterEmailPassword = (email, password, name) => {
         dispatch(login(user.uid, user.displayName));
       })
       .catch((e) => {
-        console.log(e);
+        Swal.fire("Error", "El correo ya ha sido registrado", "error");
       });
   };
 };
