@@ -1,7 +1,31 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useForm } from "../../hooks/useForm";
+import { activeNote, startDeleting } from "../../redux/notes/notes-actions";
 import NoteAppBar from "./NoteAppBar";
 
 const Note = () => {
+  const dispatch = useDispatch();
+  const { active: note } = useSelector((state) => state.notes);
+  const [formValues, handleInputChange, reset] = useForm(note);
+  const { body, title, id } = formValues;
+  const activeId = useRef(note.id);
+
+  useEffect(() => {
+    if (note.id !== activeId.current) {
+      reset(note);
+      activeId.current = note.id;
+    }
+  }, [note, reset]);
+
+  useEffect(() => {
+    dispatch(activeNote(formValues.id, { ...formValues }));
+  }, [formValues, dispatch]);
+
+  const handleDelete = () => {
+    dispatch(startDeleting(id));
+  };
+
   return (
     <div className="notes">
       <NoteAppBar />
@@ -12,20 +36,29 @@ const Note = () => {
           placeholder="Un título inspiracional"
           className="notes__form-title"
           autoComplete="off"
+          name="title"
+          value={title}
+          onChange={handleInputChange}
         />
 
         <textarea
           placeholder="Qué sucedió hoy?"
           className="notes__form-textarea"
+          name="body"
+          value={body}
+          onChange={handleInputChange}
         ></textarea>
 
-        <div className="notes__form-img">
-          <img
-            src="https://images.unsplash.com/photo-1608855417613-bfade15518a3?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=700&q=80"
-            alt="img"
-          />
-        </div>
+        {note.url && (
+          <div className="notes__form-img">
+            <img src={note.url} alt="img" />
+          </div>
+        )}
       </div>
+
+      <button className="btn btn-danger" onClick={handleDelete}>
+        Borrar
+      </button>
     </div>
   );
 };

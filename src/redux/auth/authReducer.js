@@ -12,9 +12,7 @@ const authReducer = (state = {}, action) => {
       return {};
 
     default:
-      return {
-        state,
-      };
+      return state;
   }
 };
 

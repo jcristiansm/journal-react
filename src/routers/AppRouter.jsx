@@ -8,6 +8,7 @@ import AuthRouter from "./AuthRouter";
 import { login } from "../redux/auth/auth-actions";
 import PublicRoute from "./PublicRoute";
 import PrivateRoute from "./PrivateRoute";
+import { startLoadingNotes } from "../redux/notes/notes-actions";
 
 const AppRouter = () => {
   const dispatch = useDispatch();
@@ -16,10 +17,11 @@ const AppRouter = () => {
   const [isLogged, setIsLogged] = useState(false);
 
   useEffect(() => {
-    firebase.auth().onAuthStateChanged((user) => {
+    firebase.auth().onAuthStateChanged(async (user) => {
       if (user?.uid) {
         dispatch(login(user.uid, user.displayName));
         setIsLogged(true);
+        dispatch(startLoadingNotes(user.uid));
       } else {
         setIsLogged(false);
       }
